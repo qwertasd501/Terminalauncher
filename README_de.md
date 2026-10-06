@@ -3,7 +3,7 @@
 # Terminalauncher
 
 Ein minimalisticher Minecraft Launcher für die Kommandozeile, mit einem Inhaltsverwalter im PCL-Stil.  
-[EN](README.md) | DE
+[EN](README.md) | [DE](README_de.md) | [ZH](README_zh.md)
 
 [![Build](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml/badge.svg)](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/qwertasd501/Terminalauncher)
