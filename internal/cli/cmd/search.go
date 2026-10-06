@@ -108,8 +108,13 @@ func Search(kind, query string, reverse bool) (table.Row, []table.Row, error) {
 }
 
 // Run searches, then (in interactive use) lets the user pick a row to download.
+//
+// The README documents `search [<query>] [--kind {...}]` and notes that it defaults to game
+// versions, so a missing --kind resolves to "versions" instead of prompting. Only when the user
+// is already in the wizard (no query on the command line) do we ask which kind to search.
 func (c *SearchCmd) Run(ctx *kong.Context) error {
-	query := c.Query
+	query := strings.TrimSpace(c.Query)
+	askedQuery := false
 	if query == "" {
 		line, err := promptLine(output.Translate("search.interactive.query"))
 		if err != nil {
@@ -120,15 +125,20 @@ func (c *SearchCmd) Run(ctx *kong.Context) error {
 			output.Info(output.Translate("search.interactive.empty"))
 			return nil
 		}
+		askedQuery = true
 	}
 
 	kind := c.Kind
 	if kind == "" {
-		picked, ok := promptChoice(output.Translate("search.interactive.kind"), searchKinds)
-		if !ok {
-			return nil
+		if askedQuery {
+			picked, ok := promptChoice(output.Translate("search.interactive.kind"), searchKinds)
+			if !ok {
+				return nil
+			}
+			kind = picked
+		} else {
+			kind = "versions"
 		}
-		kind = picked
 	} else if !slices.Contains(searchKinds, kind) {
 		return fmt.Errorf(output.Translate("shell.badkind"), kind)
 	}
@@ -204,17 +214,23 @@ func promptLine(prompt string) (string, error) {
 	return strings.TrimRight(line, "\r\n"), nil
 }
 
-// promptChoice shows a numbered menu and returns the chosen entry, or "" when the user cancels.
+// promptChoice shows a numbered menu and returns the chosen entry. An empty line accepts the
+// first option, matching the shell picker's "Enter = default" behaviour.
 func promptChoice(title string, options []string) (string, bool) {
 	fmt.Println(title)
 	for i, option := range options {
 		fmt.Printf("  %d) %s\n", i+1, option)
 	}
+	fmt.Printf("  (Enter = %s)\n", options[0])
 	line, err := promptLine("")
 	if err != nil {
 		return "", false
 	}
-	n, err := strconv.Atoi(strings.TrimSpace(line))
+	s := strings.TrimSpace(line)
+	if s == "" {
+		return options[0], true
+	}
+	n, err := strconv.Atoi(s)
 	if err != nil || n < 1 || n > len(options) {
 		output.Error(output.Translate("search.interactive.badindex"))
 		return "", false
