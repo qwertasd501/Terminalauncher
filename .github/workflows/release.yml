@@ -27,14 +27,6 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o dist/Terminalauncher-windows-amd64.exe .
           GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o dist/Terminalauncher-darwin-arm64 .
 
-      - name: Build portable Windows package
-        run: |
-          mkdir -p portable
-          cp dist/Terminalauncher-windows-amd64.exe portable/
-          cp LICENSE portable/
-          cp README.md portable/
-          cd portable && zip -9 ../dist/Terminalauncher-windows-amd64-portable.zip *
-
       - name: Upload binaries to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
