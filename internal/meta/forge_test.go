@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	env "github.com/telecter/cmd-launcher/pkg"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 func TestWithGamePrefix(t *testing.T) {

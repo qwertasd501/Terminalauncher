@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/fatih/color"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
 )
 
 // captureOutput collects what the launcher prints while fn runs. The log lines go through the

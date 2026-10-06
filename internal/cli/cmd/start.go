@@ -7,10 +7,10 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/fatih/color"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 	"github.com/schollz/progressbar/v3"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/pkg/auth"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
 )
 
 func watcher(verbosity int) launcher.EventWatcher {

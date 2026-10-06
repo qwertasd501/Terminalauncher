@@ -1,4 +1,4 @@
-module github.com/telecter/cmd-launcher
+module github.com/qwertasd501/Terminalauncher
 
 go 1.25.5
 

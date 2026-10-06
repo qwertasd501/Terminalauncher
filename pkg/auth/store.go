@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	env "github.com/telecter/cmd-launcher/pkg"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // Store is the global authentication store.

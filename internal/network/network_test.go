@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/internal/network"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
 )
 
 func TestDownloadFile(t *testing.T) {

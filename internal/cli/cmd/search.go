@@ -9,8 +9,8 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
 )
 
 // SearchCmd enables search of game and mod loader versions.

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/telecter/cmd-launcher/internal/network"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
 )
 
 const scope = "XboxLive.signin offline_access"

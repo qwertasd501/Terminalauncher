@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
-	env "github.com/telecter/cmd-launcher/pkg"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // TestDefaultInstanceName covers the name the launcher builds when the caller does not give one:

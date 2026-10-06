@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
 )
 
 // extractNatives extracts all native DLLs/SOs from legacy LWJGL 2 natives JARs

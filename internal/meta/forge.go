@@ -16,8 +16,8 @@ import (
 	"strings"
 
 	"github.com/iancoleman/orderedmap"
-	"github.com/telecter/cmd-launcher/internal/network"
-	env "github.com/telecter/cmd-launcher/pkg"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // A ForgeInstallProfile contains install libraries and processors used to initialize Forge.

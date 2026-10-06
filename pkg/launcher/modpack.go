@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/internal/network"
-	env "github.com/telecter/cmd-launcher/pkg"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // ModpackMarker is written into an instance installed from a modpack, so that the shell can list

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/pkg/memory"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/pkg/memory"
 )
 
 // clearCmd handles "clear". On its own, or with "screen", it wipes the terminal. With "memory" it

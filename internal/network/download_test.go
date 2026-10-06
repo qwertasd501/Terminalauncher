@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/telecter/cmd-launcher/internal/network"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
 )
 
 // withDownloadLimit runs the test body with a download thread count of limit, restoring the

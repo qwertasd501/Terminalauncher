@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/telecter/cmd-launcher/internal/network"
-	env "github.com/telecter/cmd-launcher/pkg"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // A FabricVersionList is a list of all Fabric loader versions.

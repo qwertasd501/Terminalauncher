@@ -5,7 +5,7 @@ import (
 	"runtime"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/telecter/cmd-launcher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
 )
 
 // filterLibraries sorts game libraries into installed and required libraries.

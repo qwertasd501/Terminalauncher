@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/internal/network"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
 )
 
 // LaunchOptions represents configuration options when preparing an instance to be launched.

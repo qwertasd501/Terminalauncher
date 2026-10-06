@@ -3,8 +3,8 @@ package launcher
 import (
 	"testing"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
 )
 
 // argsContainPair reports whether args holds name immediately followed by value.

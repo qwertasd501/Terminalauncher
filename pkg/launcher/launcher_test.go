@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/telecter/cmd-launcher/internal/meta"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
 )
 
 func TestCreateInstance(t *testing.T) {

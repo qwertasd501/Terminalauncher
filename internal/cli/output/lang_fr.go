@@ -99,7 +99,7 @@ var fr = translations{
 	"launcher.description": "Un launcher Minecraft minimaliste pour la ligne de commande.",
 	"launcher.license":     "Sous licence MIT",
 	"launcher.copyright":   "Copyright 2024-2025 telecter ; fork maintenu par qwertasd501",
-	"launcher.fork":        "Cette version est un fork modifié de cmd-launcher ; les détails sont dans le fichier LICENSE.",
+	"launcher.fork":        "Terminalauncher est un fork modifié de cmd-launcher ; les détails sont dans le fichier LICENSE.",
 	"launcher.error":       "Erreur",
 	"launcher.warning":     "Avertissement",
 	"launcher.debug":       "Débogage",

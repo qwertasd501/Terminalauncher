@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/pelletier/go-toml/v2"
-	env "github.com/telecter/cmd-launcher/pkg"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // GlobalSettings are launcher-wide defaults that instances can follow.

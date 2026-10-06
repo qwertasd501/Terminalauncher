@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/telecter/cmd-launcher/internal/cli"
+	"github.com/qwertasd501/Terminalauncher/internal/cli"
 )
 
 func main() {

@@ -13,12 +13,12 @@ import (
 	"github.com/buildkite/shellwords"
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/telecter/cmd-launcher/internal/cli/cmd"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/internal/tui"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/cmd"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/tui"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 	"golang.org/x/term"
 )
 
@@ -205,7 +205,7 @@ func (s *shell) banner() {
 // promptText returns the command prompt.
 //
 // The selected instance and the active account are shown side by side, as in
-// "cmd-launcher [1.20.1-Forge_47.4.16-LTSC]_[123456]>", so that the next command's target is
+// "Terminalauncher [1.20.1-Forge_47.4.16-LTSC]_[123456]>", so that the next command's target is
 // always visible without running "info". A part that is not set is shown as "-", which keeps the
 // two slots in the same place; while neither is set the brackets are dropped altogether.
 func (s *shell) promptText() string {

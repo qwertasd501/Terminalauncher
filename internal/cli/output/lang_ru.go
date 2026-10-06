@@ -99,7 +99,7 @@ var ru = translations{
 	"launcher.description": "Минималистичный консольный лаунчер Minecraft.",
 	"launcher.license":     "Лицензия MIT",
 	"launcher.copyright":   "Copyright 2024-2025 telecter; форк поддерживается qwertasd501",
-	"launcher.fork":        "Эта сборка — изменённый форк cmd-launcher; подробности в файле LICENSE.",
+	"launcher.fork":        "Terminalauncher — изменённый форк cmd-launcher; подробности в файле LICENSE.",
 	"launcher.error":       "Ошибка",
 	"launcher.warning":     "Предупреждение",
 	"launcher.debug":       "Отладка",

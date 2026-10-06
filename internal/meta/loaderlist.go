@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/telecter/cmd-launcher/internal/network"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
 )
 
 // The listing endpoints used to fill the interactive version pickers.

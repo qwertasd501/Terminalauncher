@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 func TestContentKindOf(t *testing.T) {

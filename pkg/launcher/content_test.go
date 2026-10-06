@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	env "github.com/telecter/cmd-launcher/pkg"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // writeArchive creates a zip file with the given entries, standing in for a mod jar or a pack.

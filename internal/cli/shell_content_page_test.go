@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 // withGameDir points the launcher at a temporary game directory for the duration of a test. It

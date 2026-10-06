@@ -8,10 +8,10 @@ import (
 	"testing"
 
 	"github.com/fatih/color"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/internal/network"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 // testShell returns a shell whose input is already exhausted, so commands that ask a question

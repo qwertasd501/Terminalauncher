@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/telecter/cmd-launcher/pkg/auth"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 // shellVerbs are the command verbs, offered when the line is still empty.

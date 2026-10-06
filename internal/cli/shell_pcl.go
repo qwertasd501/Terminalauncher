@@ -15,14 +15,14 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/mattn/go-runewidth"
 	"github.com/pkg/browser"
-	"github.com/telecter/cmd-launcher/internal/cli/cmd"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/internal/network"
-	"github.com/telecter/cmd-launcher/internal/tui"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/auth"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/cmd"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
+	"github.com/qwertasd501/Terminalauncher/internal/tui"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 // A menuItem is one row of an interactive settings menu.

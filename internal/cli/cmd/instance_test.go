@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 // TestCreateFetchesTheFilesItNeeds pins the point of CreateCmd: creating an instance also fetches

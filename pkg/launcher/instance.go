@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	"github.com/telecter/cmd-launcher/internal/meta"
-	env "github.com/telecter/cmd-launcher/pkg"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
 )
 
 // A Layout says where an instance lives.

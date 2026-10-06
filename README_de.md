@@ -1,8 +1,8 @@
 <img src="docs/icon.png" width="180">
 
-# cmd-launcher
+# Terminalauncher
 
-Ein minimalisticher Minecraft Launcher für die Command Line.  
+Ein minimalisticher Minecraft Launcher für die Kommandozeile, mit einem Inhaltsverwalter im PCL-Stil.  
 [EN](README.md) | DE
 
 [![Build](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml/badge.svg)](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml)
@@ -21,9 +21,14 @@ Ein minimalisticher Minecraft Launcher für die Command Line.
 
 ## Installation
 
-`go install` steht für diesen Fork nicht zur Verfügung: der Modulpfad bleibt
-`github.com/telecter/cmd-launcher`, sonst würde das Original installiert.
-Nutze stattdessen die Binärdateien oder baue aus dem Quellcode.
+### `go install`
+
+```sh
+go install github.com/qwertasd501/Terminalauncher@latest
+```
+
+Für Windows ist `Terminalauncher-windows-amd64-portable.zip` das portable Paket: irgendwo
+entpacken und `Terminalauncher.exe` starten - nichts wird installiert.
 
 ### Aus Sourcecode
 
@@ -46,7 +51,7 @@ Verwende die `--version, -v` Option um die Spielversion einzustellen, ansonsten 
 Beim Spielstart wird der Launcher versuchen, eine Java-Runtime von Mojang herunterzuladen. Falls es keine mögliche gibt, musst du die Runtime in der Instanzkonfiguration selbst einstellen.
 
 ```sh
-cmd-launcher inst create -v 1.21.8 -l fabric CoolInstance
+Terminalauncher inst create -v 1.21.8 -l fabric CoolInstance
 ```
 
 **Instanze löschen**  
@@ -58,7 +63,7 @@ Wenn du eine Instanz löschen möchtest, führe den `inst delete` Befehl aus gef
 Um Minecraft zu starten, führe einfach den `start` Befehl gefolgt von dem Name der Instanz aus, die du starten möchtest.
 
 ```bash
-cmd-launcher start CoolInstance
+Terminalauncher start CoolInstance
 ```
 
 Um Spieloptionen einzurichten, kannst du Optionen zum `start` Befehl hinzufügen.
@@ -128,5 +133,5 @@ height = 960
 Der `search` Befehl kann nach Minecraft oder Modloader Versionen suchen. Normalerweise sucht er nach Spielversionen, aber er kann auch nach Fabric, Quilt, oder Forge Versionen suchen.
 
 ```bash
-cmd-launcher search [<query>] [--kind {versions, fabric, quilt, forge}]
+Terminalauncher search [<query>] [--kind {versions, fabric, quilt, forge}]
 ```

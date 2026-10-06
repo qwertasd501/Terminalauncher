@@ -10,19 +10,19 @@ import (
 	"github.com/Xuanwo/go-locale"
 	"github.com/alecthomas/kong"
 	"github.com/fatih/color"
-	"github.com/telecter/cmd-launcher/internal/cli/cmd"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/internal/meta"
-	"github.com/telecter/cmd-launcher/internal/network"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/auth"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/cmd"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/internal/meta"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 	"go.abhg.dev/komplete"
 )
 
 const (
-	name    = "cmd-launcher"
-	version = "1.6.1"
+	name    = "Terminalauncher"
+	version = "1.0.0"
 )
 
 type aboutCmd struct{}

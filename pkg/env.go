@@ -9,16 +9,24 @@ import (
 )
 
 // configDirName is the per-user directory name used by a normal (non-portable) installation.
-const configDirName = "cmd-launcher"
+const configDirName = "Terminalauncher"
+
+// legacyConfigDirName is the name this directory had before the fork was renamed. It is still
+// consulted once, so an installation made before the rename keeps its accounts.
+const legacyConfigDirName = "cmd-launcher"
 
 // portableMarker is a file that, placed next to the launcher executable, enables portable mode
-// without any command-line flag. Distributing "cmd-launcher.exe" together with this file is
+// without any command-line flag. Distributing "Terminalauncher.exe" together with this file is
 // enough to get a self-contained launcher.
 const portableMarker = "portable.txt"
 
 // portableHomeEnv names a directory to use as the portable base, overriding the executable's
 // own directory. Useful for shortcuts and scripts that keep the launcher data elsewhere.
-const portableHomeEnv = "CMD_LAUNCHER_HOME"
+const portableHomeEnv = "TERMINAL_LAUNCHER_HOME"
+
+// legacyPortableHomeEnv is the environment variable name used before the rename. It is still
+// honoured, so shortcuts created earlier keep working.
+const legacyPortableHomeEnv = "CMD_LAUNCHER_HOME"
 
 var RootDir string // Base launcher directory. Defaults to "$HOME/.minecraft"
 
@@ -90,10 +98,15 @@ func ExecutableDir() string {
 // PortableBase returns the base directory of the portable layout, and whether portable mode
 // applies at all.
 //
-// Portable mode is used when the CMD_LAUNCHER_HOME environment variable names a directory, or
-// when a "portable.txt" file sits next to the launcher executable.
+// Portable mode is used when the TERMINAL_LAUNCHER_HOME environment variable names a directory (the
+// pre-rename name CMD_LAUNCHER_HOME is still accepted), or when a "portable.txt" file sits next to
+// the launcher executable.
 func PortableBase() (string, bool) {
-	if dir := strings.TrimSpace(os.Getenv(portableHomeEnv)); dir != "" {
+	for _, key := range []string{portableHomeEnv, legacyPortableHomeEnv} {
+		dir := strings.TrimSpace(os.Getenv(key))
+		if dir == "" {
+			continue
+		}
 		if abs, err := filepath.Abs(dir); err == nil {
 			return abs, true
 		}
@@ -147,7 +160,15 @@ func MigrateUserConfig() error {
 	if err != nil {
 		return nil
 	}
-	data, err := os.ReadFile(filepath.Join(base, configDirName, "accounts.json"))
+	var data []byte
+	// The current name is preferred; the pre-rename directory is still read so that upgrading an
+	// existing installation does not silently log the user out.
+	for _, name := range []string{configDirName, legacyConfigDirName} {
+		data, err = os.ReadFile(filepath.Join(base, name, "accounts.json"))
+		if err == nil {
+			break
+		}
+	}
 	if err != nil {
 		return nil
 	}

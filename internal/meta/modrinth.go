@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/telecter/cmd-launcher/internal/network"
+	"github.com/qwertasd501/Terminalauncher/internal/network"
 )
 
 // Modrinth is the source the shell installs mods, resource packs, shader packs, data packs and
@@ -18,7 +18,7 @@ const modrinthAPI = "https://api.modrinth.com/v2"
 
 // modrinthUserAgent identifies the launcher. Modrinth rejects requests without a user agent that
 // names the application.
-const modrinthUserAgent = "telecter/cmd-launcher (github.com/telecter/cmd-launcher)"
+const modrinthUserAgent = "qwertasd501/Terminalauncher (github.com/qwertasd501/Terminalauncher)"
 
 // Modrinth project types, as used by the search facets.
 const (

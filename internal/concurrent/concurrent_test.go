@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/telecter/cmd-launcher/internal/concurrent"
+	"github.com/qwertasd501/Terminalauncher/internal/concurrent"
 )
 
 // TestDoVisitsEveryIndexOnce checks the contract the callers rely on: every index is handed to fn

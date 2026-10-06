@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	"github.com/telecter/cmd-launcher/pkg/auth"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 // fill fetches everything an instance needs in order to start: its libraries, the assets of its

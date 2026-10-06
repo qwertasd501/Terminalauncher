@@ -7,14 +7,14 @@ import (
 	"testing"
 
 	"github.com/fatih/color"
-	"github.com/telecter/cmd-launcher/internal/cli/output"
-	env "github.com/telecter/cmd-launcher/pkg"
-	"github.com/telecter/cmd-launcher/pkg/auth"
-	"github.com/telecter/cmd-launcher/pkg/launcher"
+	"github.com/qwertasd501/Terminalauncher/internal/cli/output"
+	env "github.com/qwertasd501/Terminalauncher/pkg"
+	"github.com/qwertasd501/Terminalauncher/pkg/auth"
+	"github.com/qwertasd501/Terminalauncher/pkg/launcher"
 )
 
 // TestPromptText checks that the prompt carries both the selected instance and the active account,
-// in the "cmd-launcher [instance]_[account]> " form.
+// in the "Terminalauncher [instance]_[account]> " form.
 func TestPromptText(t *testing.T) {
 	previous := auth.Store
 	previousColor := color.NoColor
@@ -45,33 +45,33 @@ func TestPromptText(t *testing.T) {
 		{
 			name:    "nothing selected and no account",
 			current: -1,
-			want:    "cmd-launcher> ",
+			want:    "Terminalauncher> ",
 		},
 		{
 			name:     "instance only",
 			selected: inst,
 			current:  -1,
-			want:     "cmd-launcher [" + inst + "]_[-]> ",
+			want:     "Terminalauncher [" + inst + "]_[-]> ",
 		},
 		{
 			name:     "account only",
 			accounts: []*auth.Account{offline("123456")},
 			current:  0,
-			want:     "cmd-launcher [-]_[123456]> ",
+			want:     "Terminalauncher [-]_[123456]> ",
 		},
 		{
 			name:     "instance and offline account",
 			selected: inst,
 			accounts: []*auth.Account{offline("123456")},
 			current:  0,
-			want:     "cmd-launcher [" + inst + "]_[123456]> ",
+			want:     "Terminalauncher [" + inst + "]_[123456]> ",
 		},
 		{
 			name:     "instance and microsoft account",
 			selected: inst,
 			accounts: []*auth.Account{offline("123456"), online("Notch")},
 			current:  1,
-			want:     "cmd-launcher [" + inst + "]_[Notch]> ",
+			want:     "Terminalauncher [" + inst + "]_[Notch]> ",
 		},
 	}
 
@@ -99,8 +99,8 @@ func TestPromptTextUnchangedWhenStoreMissing(t *testing.T) {
 	auth.Store = auth.AuthStore{Current: -1}
 
 	s := &shell{}
-	if got := s.promptText(); got != "cmd-launcher> " {
-		t.Errorf("promptText() = %q, want %q", got, "cmd-launcher> ")
+	if got := s.promptText(); got != "Terminalauncher> " {
+		t.Errorf("promptText() = %q, want %q", got, "Terminalauncher> ")
 	}
 }
 
