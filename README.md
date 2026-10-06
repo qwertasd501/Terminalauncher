@@ -1,6 +1,6 @@
 <img src="docs/icon.png" width="180">
 
-# cmd-launcher
+# Terminalauncher
 
 A minimal command line Minecraft launcher.  
 EN | [DE](README_de.md)
