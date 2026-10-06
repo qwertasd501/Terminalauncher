@@ -1,0 +1,37 @@
+name: build
+
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://docs.github.com/en/actions/using-github-hosted-runners
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+          
+      - name: Build
+        run: go build .
+        
+      - uses: actions/upload-artifact@v4
+        if: ${{ github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+        with:
+          name: cmd-launcher_${{ runner.os }}_${{ runner.arch }}
+          path: |
+            cmd-launcher
+            cmd-launcher.exe

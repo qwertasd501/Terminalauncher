@@ -1,0 +1,31 @@
+name: release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    name: Build Go binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - name: Build binaries
+        run: |
+          mkdir -p dist
+          GOOS=linux GOARCH=amd64 go build -o dist/cmd-launcher-linux-amd64 .
+          GOOS=linux GOARCH=arm64 go build -o dist/cmd-launcher-linux-arm64 .
+          GOOS=windows GOARCH=amd64 go build -o dist/cmd-launcher-windows-amd64.exe .
+          GOOS=darwin GOARCH=arm64 go build -o dist/cmd-launcher-darwin-arm64 .
+
+      - name: Upload binaries to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run:
+          gh release upload --clobber ${{ github.event.release.tag_name }} dist/* 

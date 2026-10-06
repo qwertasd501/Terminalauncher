@@ -1,0 +1,351 @@
+// Package launcher provides the necessary functions to start the game.
+package launcher
+
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strconv"
+	"strings"
+
+	"github.com/telecter/cmd-launcher/internal/meta"
+	"github.com/telecter/cmd-launcher/internal/network"
+	env "github.com/telecter/cmd-launcher/pkg"
+	"github.com/telecter/cmd-launcher/pkg/auth"
+)
+
+// LaunchOptions represents configuration options when preparing an instance to be launched.
+type LaunchOptions struct {
+	Session auth.Session
+
+	InstanceConfig
+	QuickPlayServer    string
+	QuickPlayWorld     string
+	Demo               bool
+	DisableMultiplayer bool
+	DisableChat        bool
+
+	skipAssets    bool
+	skipLibraries bool
+}
+
+// An EventWatcher is a controller that can handle multiple types of events.
+type EventWatcher func(event any)
+
+// MetadataResolvedEvent is called when all metadata has been retrieved
+type MetadataResolvedEvent struct{}
+
+// LibrariesResolvedEvent is called when all game libraries have been identified and filtered.
+type LibrariesResolvedEvent struct {
+	Total int
+}
+
+// AssetsResolvedEvent is called when all game assets have been identified and filtered.
+type AssetsResolvedEvent struct {
+	Total int
+}
+
+// DownloadingEvent is called when a download has progressed.
+type DownloadingEvent struct {
+	Completed int
+	Total     int
+}
+
+// PostProcessingEvent is called when, usually Forge, pre-processing begins.
+type PostProcessingEvent struct{}
+
+// A Runner is a controller which manages the starting of the game.
+type Runner func(cmd *exec.Cmd) error
+
+// An ConsoleRunner is an implementation of Runner which logs game output to the console.
+func ConsoleRunner(cmd *exec.Cmd) error {
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+// A LaunchEnvironment represents the information needed to start the game.
+type LaunchEnvironment struct {
+	GameDir   string
+	Java      string
+	MainClass string
+	Classpath []string
+	JavaArgs  []string
+	GameArgs  []string
+}
+
+// Launch starts a LaunchEnvironment with the specified runner.
+//
+// The Java executable is checked and the classpath and command arguments are finalized.
+func Launch(launchEnv LaunchEnvironment, runner Runner) error {
+	if _, err := os.Stat(launchEnv.Java); err != nil {
+		return fmt.Errorf("Java executable does not exist") //lint:ignore ST1005 should be capitalized
+	}
+
+	javaArgs := append(launchEnv.JavaArgs, "-cp", strings.Join(launchEnv.Classpath, string(os.PathListSeparator)), launchEnv.MainClass)
+	cmd := exec.Command(launchEnv.Java, append(javaArgs, launchEnv.GameArgs...)...)
+	cmd.Dir = launchEnv.GameDir
+	return runner(cmd)
+}
+
+// Prepare prepares the instance to be launched, returning a LaunchEnvironment, with the provided options and sends events to watcher.
+func Prepare(inst *Instance, options LaunchOptions, watcher EventWatcher) (LaunchEnvironment, error) {
+	var downloads []network.DownloadEntry
+
+	version, err := meta.FetchAllVersionMeta(inst.Loader, inst.GameVersion, inst.LoaderVersion)
+	if err != nil {
+		return LaunchEnvironment{}, fmt.Errorf("retrieve metadata: %w", err)
+	}
+
+	launchEnv := LaunchEnvironment{
+		GameDir:   inst.GameDir(),
+		Java:      options.Java,
+		MainClass: version.MainClass,
+	}
+	watcher(MetadataResolvedEvent{})
+
+	// Filter libraries, and add necessary artifact download entries
+	if options.CustomJar == "" {
+		version.Libraries = append(version.Libraries, version.Client())
+	}
+
+	installedLibs, requiredLibs := filterLibraries(version.Libraries)
+	if !options.skipLibraries {
+		for _, lib := range requiredLibs {
+			if lib.ShouldInstall {
+				downloads = append(downloads, lib.Artifact.DownloadEntry())
+			}
+			for _, native := range lib.Natives {
+				if !native.Artifact.IsDownloaded() {
+					downloads = append(downloads, native.Artifact.DownloadEntry())
+				}
+			}
+		}
+	}
+	watcher(LibrariesResolvedEvent{
+		Total: len(installedLibs) + len(requiredLibs),
+	})
+
+	// Download asset index and add all necessary asset download entries
+	assetIndex, err := meta.DownloadAssetIndex(version)
+	if err != nil {
+		return LaunchEnvironment{}, fmt.Errorf("retrieve asset index: %w", err)
+	}
+	if !options.skipAssets {
+		downloads = append(downloads, assetIndex.DownloadEntries()...)
+	}
+	watcher(AssetsResolvedEvent{Total: len(assetIndex.Objects)})
+
+	// If no Java path is present, fetch Mojang Java downloads
+	var symlinks map[string]string
+	if launchEnv.Java == "" {
+		manifest, err := meta.FetchJavaManifest(version.JavaVersion.Component)
+		if err != nil {
+			return LaunchEnvironment{}, fmt.Errorf("fetch Java manifest: %w", err)
+		}
+		var entries []network.DownloadEntry
+		entries, symlinks = manifest.DownloadEntries(version.JavaVersion.Component)
+		downloads = append(downloads, entries...)
+
+		java := "java"
+		if runtime.GOOS == "windows" {
+			java = "java.exe"
+		}
+		launchEnv.Java = filepath.Join(env.JavaDir, version.JavaVersion.Component, "bin", java)
+	}
+
+	if err := download(downloads, symlinks, watcher); err != nil {
+		return LaunchEnvironment{}, fmt.Errorf("download files: %w", err)
+	}
+
+	// Extract LWJGL 2 natives for legacy versions (pre-1.13).
+	// This is a no-op for modern versions that use LWJGL 3.
+	allLibs := append(installedLibs, requiredLibs...)
+	if err := extractNatives(inst.NativesDir(), allLibs); err != nil {
+		return LaunchEnvironment{}, fmt.Errorf("extract natives: %w", err)
+	}
+
+	// Fetch Forge post processors, if any
+
+	var processors []meta.ForgeProcessor
+	switch inst.Loader {
+	case meta.LoaderForge:
+		processors, err = meta.Forge.FetchPostProcessors(version.ID, version.LoaderID)
+		if err != nil {
+			return LaunchEnvironment{}, fmt.Errorf("fetch Forge post processors: %w", err)
+		}
+	case meta.LoaderNeoForge:
+		processors, err = meta.Neoforge.FetchPostProcessors(version.ID, version.LoaderID)
+		if err != nil {
+			return LaunchEnvironment{}, fmt.Errorf("fetch NeoForge post processors: %w", err)
+		}
+	}
+
+	if len(processors) > 0 {
+		watcher(PostProcessingEvent{})
+		// Run any available processors
+		if err := postProcess(launchEnv, processors); err != nil {
+			return LaunchEnvironment{}, fmt.Errorf("run post processors: %w", err)
+		}
+	}
+
+	launchEnv.JavaArgs, launchEnv.GameArgs = createArgs(launchEnv, version, options, inst.NativesDir())
+
+	// Finalize classpath
+	for _, library := range allLibs {
+		if library.SkipOnClasspath {
+			continue
+		}
+		launchEnv.Classpath = append(launchEnv.Classpath, library.Artifact.RuntimePath())
+	}
+	if options.CustomJar != "" {
+		launchEnv.Classpath = append(launchEnv.Classpath, options.CustomJar)
+	}
+	return launchEnv, nil
+}
+
+// download takes a list of download entries and executes them, reporting download events to watcher.
+//
+// It also creates all symlinks specified.
+//
+// The whole batch is drained even after a failure, because the downloads run in parallel: reporting
+// the first error right away would abandon the remaining files and leave the progress bar short of
+// the total.
+func download(entries []network.DownloadEntry, symlinks map[string]string, watcher EventWatcher) error {
+	for link, target := range symlinks {
+		if err := os.MkdirAll(filepath.Dir(link), 0755); err != nil {
+			return fmt.Errorf("create directory for symlink %q: %w", link, err)
+		}
+		if err := os.Symlink(target, link); err != nil {
+			return fmt.Errorf("create symlink %q: %w", link, err)
+		}
+	}
+	if len(entries) == 0 {
+		return nil
+	}
+
+	finished := 0
+	var firstErr error
+	for err := range network.StartDownloadEntries(entries) {
+		finished++
+		watcher(DownloadingEvent{
+			Completed: finished,
+			Total:     len(entries),
+		})
+		if err != nil && firstErr == nil {
+			firstErr = err
+		}
+	}
+	return firstErr
+}
+
+// createArgs takes data from a launch environment, version metadata, and environment options to
+// create a set of game and Java arguments to pass when starting the game.
+func createArgs(launchEnv LaunchEnvironment, version meta.VersionMeta, options LaunchOptions, nativesDir string) (java, game []string) {
+	// A custom info string replaces the version type, which is what the game shows in the corner of
+	// the main menu and in the debug screen.
+	versionType := version.Type
+	if options.CustomInfo != "" {
+		versionType = options.CustomInfo
+	}
+
+	// Game arguments
+	game = []string{
+		"--username", options.Session.Username,
+		"--accessToken", options.Session.AccessToken,
+		"--userType", "msa",
+		"--gameDir", launchEnv.GameDir,
+		"--assetsDir", env.AssetsDir,
+		"--assetIndex", version.AssetIndex.ID,
+		"--version", version.ID,
+		"--versionType", versionType,
+	}
+
+	gameOptions, _ := os.ReadFile(filepath.Join(launchEnv.GameDir, "options.txt"))
+	if !strings.Contains(string(gameOptions), "fullscreen:true") {
+		game = append(game, "--width", strconv.Itoa(options.WindowResolution.Width))
+		game = append(game, "--height", strconv.Itoa(options.WindowResolution.Height))
+	}
+
+	// An instance can join a server automatically; a server given on the command line wins.
+	quickPlayServer := options.QuickPlayServer
+	if quickPlayServer == "" {
+		quickPlayServer = options.AutoJoinServer
+	}
+
+	switch {
+	case quickPlayServer != "":
+		game = append(game, "--quickPlayMultiplayer", quickPlayServer)
+	case options.QuickPlayWorld != "":
+		game = append(game, "--quickPlaySingleplayer", options.QuickPlayWorld)
+	}
+	if options.Session.UUID != "" {
+		game = append(game, "--uuid", options.Session.UUID)
+	}
+	if options.Demo {
+		game = append(game, "--demo")
+	}
+	if options.DisableChat {
+		game = append(game, "--disableChat")
+	}
+	if options.DisableMultiplayer {
+		game = append(game, "--disableMultiplayer")
+	}
+
+	// Java arguments
+	if options.WindowTitle != "" {
+		// Not a vanilla launch argument: it is only honoured by a client or mod that reads this
+		// system property.
+		java = append(java, "-Dminecraft.windowTitle="+options.WindowTitle)
+	}
+	if runtime.GOOS == "darwin" {
+		java = append(java, "-XstartOnFirstThread")
+	}
+	if options.MinMemory != 0 {
+		java = append(java, fmt.Sprintf("-Xms%dm", options.MinMemory))
+	}
+	if options.MaxMemory != 0 {
+		java = append(java, fmt.Sprintf("-Xmx%dm", options.MaxMemory))
+	}
+	if options.JavaArgs != "" {
+		java = append(java, strings.Split(options.JavaArgs, " ")...)
+	}
+	for _, arg := range version.Arguments.Game {
+		if arg, ok := arg.(string); ok {
+			game = append(game, arg)
+		}
+	}
+	for _, arg := range version.Arguments.Jvm {
+		// Replace any templates
+		if arg, ok := arg.(string); ok {
+			arg = strings.ReplaceAll(arg, "${version_name}", version.ID)
+			arg = strings.ReplaceAll(arg, "${library_directory}", env.LibrariesDir)
+			arg = strings.ReplaceAll(arg, "${classpath_separator}", string(os.PathListSeparator))
+			java = append(java, arg)
+		}
+	}
+
+	// Legacy LWJGL 2 (pre-1.13) requires natives extracted into a directory.
+	// Inject java.library.path only when such JARs are present in the resolved set.
+	if nativesDir != "" {
+		java = append(java, fmt.Sprintf("-Djava.library.path=%s", nativesDir))
+	}
+
+	return java, game
+}
+
+// postProcess takes all Forge post processors and runs them with specified launch environment.
+func postProcess(launchEnv LaunchEnvironment, processors []meta.ForgeProcessor) error {
+	for _, processor := range processors {
+		cmd := exec.Command(launchEnv.Java, processor.JavaArgs...)
+		cmd.Dir = launchEnv.GameDir
+		cmd.Stderr = os.Stdout
+		if err := cmd.Run(); err != nil {
+			return err
+		}
+	}
+	return nil
+}

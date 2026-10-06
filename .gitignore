@@ -1,0 +1,35 @@
+# --- Build output ---
+/cmd-launcher
+/cmd-launcher.exe
+/dist/
+*.exe
+
+# --- Launcher data: accounts, game files, downloads ---
+# Never commit these. config/accounts.json holds login material, and the rest
+# is hundreds of megabytes of downloads that belong to whoever runs the build.
+/config/
+/caches/
+/instances/
+/versions/
+/libraries/
+/assets/
+/runtime/
+/logs/
+/tmp/
+/minecraft/
+launcher.toml
+portable.txt
+
+# --- Portable release packaging (built locally, uploaded to Releases) ---
+/cmd-launcher-portable/
+/cmd-launcher-portable.zip
+
+# --- Editor / OS / scratch files ---
+.workbuddy*
+*.bak
+*.orig
+*.old
+*~
+.DS_Store
+Thumbs.db
+*.log
