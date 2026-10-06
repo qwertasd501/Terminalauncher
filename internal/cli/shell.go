@@ -1079,16 +1079,51 @@ func (s *shell) searchCmd(rest []string) {
 	s.searchKind(kind, strings.Join(query, " "), reverse)
 }
 
-// searchKind runs the search command for the given kind.
+// searchKind runs the version search interactively: it asks for the query and kind when they were
+// not given, shows the results, and then downloads the row the user picks.
 func (s *shell) searchKind(kind, query string, reverse bool) {
-	search := cmd.SearchCmd{
-		Query:   query,
-		Kind:    kind,
-		Reverse: reverse,
+	if query == "" {
+		q, changed, err := s.askText(output.Translate("search.interactive.query"), "")
+		if err != nil || !changed {
+			return
+		}
+		query = q
 	}
-	if err := search.Run(nil); err != nil {
+	if kind == "" {
+		kinds := []string{"versions", "fabric", "quilt", "forge"}
+		index, ok := s.pick(output.Translate("search.interactive.kind"), kinds, 0)
+		if !ok {
+			return
+		}
+		kind = kinds[index]
+	}
+
+	header, rows, err := cmd.Search(kind, query, reverse)
+	if err != nil {
 		output.Error("%s", err)
+		return
 	}
+	if len(rows) == 0 {
+		output.Info(output.Translate("search.complete"), 0)
+		return
+	}
+
+	t := table.NewWriter()
+	t.SetStyle(table.StyleLight)
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(header)
+	t.AppendRows(rows)
+	t.Render()
+
+	entries := make([]string, len(rows))
+	for i, row := range rows {
+		entries[i] = fmt.Sprint(row[0])
+	}
+	index, ok := s.pick(output.Translate("search.interactive.pick"), entries, 0)
+	if !ok {
+		return
+	}
+	s.createFromSearch(kind, rows[index])
 }
 
 func (s *shell) authCmd(rest []string) {

@@ -335,6 +335,28 @@ func (s *shell) createVersion(name, loader, gameVersion, loaderVersion string, n
 	s.selectedContent, s.contentWorld = "", ""
 }
 
+// createFromSearch downloads the version a search result row stands for.
+//
+// A picked row names the version the way the search showed it: a game version for "versions", the
+// loader version for Fabric and Quilt (the game version is asked for by the wizard), and both for
+// Forge. The wizard fills in anything still missing, so the version is ready to play afterwards.
+func (s *shell) createFromSearch(kind string, row table.Row) {
+	var gameVersion, loader, loaderVersion string
+	switch kind {
+	case "versions":
+		gameVersion, _ = row[0].(string)
+		loader, loaderVersion = "vanilla", "latest"
+	case "fabric", "quilt":
+		loaderVersion, _ = row[0].(string)
+		loader = kind
+	case "forge":
+		loaderVersion, _ = row[0].(string)
+		gameVersion, _ = row[1].(string)
+		loader = "forge"
+	}
+	s.createVersion("", loader, gameVersion, loaderVersion, false)
+}
+
 // cdCmd changes the game directory.
 //
 // The directory is never created silently: a typo would otherwise leave junk behind, so the user is
@@ -1181,17 +1203,22 @@ func (s *shell) setVersions(name string) {
 		}
 	}
 
-	items := []menuItem{
-		{
-			// The files of the version are managed from its own page, which is where a PCL user
-			// looks for them. The "list mods" family keeps working for scripts.
-			label: output.Translate("shell.contentmgr"),
-			value: func() string { return s.contentRow(inst) },
+	// Each content category gets its own row, the way PCL's version page lists mods, resource
+	// packs, shaders and data packs separately. The "list mods" family keeps working for scripts.
+	contentRows := make([]menuItem, 0, len(launcher.ContentKinds))
+	for _, kind := range launcher.ContentKinds {
+		k := kind
+		contentRows = append(contentRows, menuItem{
+			label: contentLabel(k),
+			value: func() string { return s.contentKindRow(inst, k) },
 			edit: func() error {
-				s.contentPage(name)
+				s.contentCategoryPage(name, k)
 				return nil
 			},
-		},
+		})
+	}
+
+	items := []menuItem{
 		{
 			label: output.Translate("shell.set.description"),
 			value: func() string { return orDash(config.Description) },
@@ -1342,6 +1369,7 @@ func (s *shell) setVersions(name string) {
 		},
 	}
 
+	items = append(contentRows, items...)
 	s.menu(title, items)
 	output.Success(output.Translate("shell.set.saved"), inst.ConfigPath())
 }
