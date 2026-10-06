@@ -551,6 +551,7 @@ func (s *shell) helpCmd(rest []string) {
 	}
 	t.Render()
 	output.Tip(output.Translate("shell.helpusage"))
+	output.Info("%s: %s", output.Translate("launcher.project"), projectURL)
 }
 
 func (s *shell) listCmd(rest []string) {

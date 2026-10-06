@@ -236,7 +236,20 @@ type InstanceOptions struct {
 	// end in something like "-LTSC". It is ignored when Name is set.
 	Suffix string
 
+	// Layout says where the version is created. Leaving it empty creates a standard version, under
+	// <game directory>/versions/<name>, which is what PCL and the official launcher use.
+	Layout Layout
+
 	Config InstanceConfig
+}
+
+// layout returns the directory layout a version is created in, which is the standard versions
+// layout unless the options ask for the launcher's own one.
+func (options InstanceOptions) layout() Layout {
+	if options.Layout != "" {
+		return options.Layout
+	}
+	return LayoutVersions
 }
 
 // DefaultInstanceName builds the name to use when the caller does not give one itself:
@@ -276,7 +289,11 @@ func DefaultInstanceName(gameVersion string, loader meta.Loader, loaderVersion, 
 // The options may leave the name empty, in which case the instance is named after what it turns out
 // to be (see DefaultInstanceName) using the versions the metadata resolves to, so that aliases such
 // as "release" and "latest" still produce a name like "1.21.5-Forge_52.0.2".
+//
+// A version is created under the standard versions directory unless the options ask for the
+// launcher's own layout, so that PCL and other launchers find it where they expect it.
 func CreateInstance(options InstanceOptions) (Instance, error) {
+	layout := options.layout()
 	if options.Name != "" && DoesInstanceExist(options.Name) {
 		return Instance{}, fmt.Errorf("instance already exists")
 	}
@@ -304,6 +321,12 @@ func CreateInstance(options InstanceOptions) (Instance, error) {
 	if config == (InstanceConfig{}) {
 		config = DefaultInstanceConfig()
 	}
+	// The version directory is the game directory, the way PCL keeps each version's mods and saves
+	// with it, so a new version starts isolated instead of sharing the game directory with every
+	// other one. The version's own settings can change it afterwards.
+	if config.VersionIsolation == "" || config.VersionIsolation == "follow" {
+		config.VersionIsolation = "on"
+	}
 
 	inst := Instance{
 		Name:          name,
@@ -311,7 +334,7 @@ func CreateInstance(options InstanceOptions) (Instance, error) {
 		Loader:        options.Loader,
 		LoaderVersion: version.LoaderID,
 		Config:        config,
-		Layout:        LayoutInstances,
+		Layout:        layout,
 	}
 
 	if err := os.MkdirAll(inst.Dir(), 0755); err != nil {
@@ -601,10 +624,14 @@ func DoesInstanceExist(name string) bool {
 		if err != nil || !info.IsDir() {
 			continue
 		}
-		// A version directory must carry its version metadata to count as an instance.
+		// A version directory counts when it carries either its own configuration, which is what a
+		// version created here has, or the version metadata of the standard layout, which is what
+		// PCL and the official launcher write.
 		if layout == LayoutVersions {
-			if _, err := os.Stat(filepath.Join(dir, name+".json")); err != nil {
-				continue
+			if _, _, err := readConfig(dir); err != nil {
+				if _, err := os.Stat(filepath.Join(dir, name+".json")); err != nil {
+					continue
+				}
 			}
 		}
 		return true

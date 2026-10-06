@@ -83,6 +83,11 @@ When starting the game, the launcher will attempt to download a Java runtime fro
 Terminalauncher inst create -v 1.21.8 -l fabric CoolInstance
 ```
 
+A version is created under the standard directory, `<game directory>/versions/<name>`, where PCL and
+the official launcher keep theirs, and its game data stays with it (version isolation is on, and can
+be changed from the version's own settings). Versions an older build created in
+`<game directory>/instances/<name>` are still found, started and deleted as usual.
+
 **Deleting instances**  
 If you want to delete an instance, use the `inst delete` command followed by the instance name.
 

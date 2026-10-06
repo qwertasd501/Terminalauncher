@@ -97,6 +97,7 @@ var ru = translations{
 	"tip.noaccount": "Чтобы запустить игру в автономном режиме, используйте флаг --username (-u).",
 
 	"launcher.description": "Минималистичный консольный лаунчер Minecraft.",
+	"launcher.project":     "Проект",
 	"launcher.license":     "Лицензия MIT",
 	"launcher.copyright":   "Copyright 2024-2025 telecter; форк поддерживается qwertasd501",
 	"launcher.fork":        "Terminalauncher — изменённый форк cmd-launcher; подробности в файле LICENSE.",

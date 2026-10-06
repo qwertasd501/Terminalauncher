@@ -157,6 +157,18 @@ func TestCreateInstance(t *testing.T) {
 					t.Log(err)
 				}
 			}
+			// A created version belongs in the standard versions directory, where PCL and the
+			// official launcher keep them, not in the launcher's own instances directory. A failed
+			// creation leaves no directory to look at, so it only applies where one was made.
+			if tt.wantError {
+				return
+			}
+			if inst.Layout != LayoutVersions {
+				t.Errorf("the version was created with layout %q; want %q", inst.Layout, LayoutVersions)
+			}
+			if want := filepath.Join(env.VersionsDir, inst.Name); inst.Dir() != want {
+				t.Errorf("the version directory is %q; want %q", inst.Dir(), want)
+			}
 			if _, err := os.Stat(inst.Dir()); err != nil {
 				t.Errorf("instance directory should be accessible; got error: %s", err)
 			}
@@ -215,7 +227,7 @@ func TestRenameInstance(t *testing.T) {
 	if err := inst.Rename(name); err != nil {
 		t.Errorf("wanted no error; got: %s", err)
 	}
-	if _, err := os.Stat(filepath.Join(env.InstancesDir, name)); err != nil {
+	if _, err := os.Stat(filepath.Join(env.VersionsDir, name)); err != nil {
 		t.Error("renamed instance directory does not exist; but should")
 	}
 
@@ -323,5 +335,52 @@ func TestPrepare(t *testing.T) {
 				t.Errorf("wanted no error; got: %s", err)
 			}
 		})
+	}
+}
+
+// TestVersionsLayoutIsWhereVersionsGo pins where a downloaded version ends up: in the standard
+// versions directory, next to the ones PCL and the official launcher write, and not inside the
+// launcher's own instances directory.
+//
+// Fetching metadata is what CreateInstance does first, so the layout is checked without it: a
+// version directory written here stands in for one CreateInstance would have made.
+func TestVersionsLayoutIsWhereVersionsGo(t *testing.T) {
+	env.SetDirs(t.TempDir())
+
+	if got := (InstanceOptions{}).layout(); got != LayoutVersions {
+		t.Errorf("a version with no layout asked for goes to %q; want %q", got, LayoutVersions)
+	}
+	if got := (InstanceOptions{Layout: LayoutInstances}).layout(); got != LayoutInstances {
+		t.Errorf("an explicitly requested layout was overridden: got %q", got)
+	}
+
+	inst := Instance{
+		Name:          "1.20.1-Forge_47.4.16-LTSC",
+		GameVersion:   "1.20.1",
+		Loader:        meta.LoaderForge,
+		LoaderVersion: "47.4.16",
+		Config:        DefaultInstanceConfig(),
+		Layout:        LayoutVersions,
+	}
+	if err := inst.WriteConfig(); err != nil {
+		t.Fatalf("writing the version configuration: %s", err)
+	}
+
+	if _, err := os.Stat(filepath.Join(env.InstancesDir, inst.Name)); err == nil {
+		t.Error("the version landed in the instances directory; it belongs in versions")
+	}
+	if !DoesInstanceExist(inst.Name) {
+		t.Error("a versions directory holding its own configuration was not recognised as a version")
+	}
+
+	found, err := FetchInstance(inst.Name)
+	if err != nil {
+		t.Fatalf("fetching the version: %s", err)
+	}
+	if found.Layout != LayoutVersions {
+		t.Errorf("the version was read back with layout %q; want %q", found.Layout, LayoutVersions)
+	}
+	if want := filepath.Join(env.VersionsDir, inst.Name); found.Dir() != want {
+		t.Errorf("the version directory is %q; want %q", found.Dir(), want)
 	}
 }

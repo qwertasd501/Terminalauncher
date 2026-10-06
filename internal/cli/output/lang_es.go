@@ -97,6 +97,7 @@ var es = translations{
 	"tip.noaccount": "Para iniciar en modo sin conexión, usa la opción --username (-u).",
 
 	"launcher.description": "Un launcher de Minecraft minimalista para la línea de comandos.",
+	"launcher.project":     "Proyecto",
 	"launcher.license":     "Bajo licencia MIT",
 	"launcher.copyright":   "Copyright 2024-2025 telecter; fork mantenido por qwertasd501",
 	"launcher.fork":        "Terminalauncher es un fork modificado de cmd-launcher; los detalles están en el archivo LICENSE.",

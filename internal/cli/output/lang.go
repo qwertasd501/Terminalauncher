@@ -101,6 +101,7 @@ var en = translations{
 	"tip.noaccount": "To launch in offline mode, use the --username (-u) flag.",
 
 	"launcher.description": "A minimal command-line Minecraft launcher.",
+	"launcher.project":     "Project",
 	"launcher.license":     "Licensed MIT",
 	"launcher.copyright":   "Copyright 2024-2025 telecter; fork maintained by qwertasd501",
 	"launcher.fork":        "Terminalauncher is a modified fork of cmd-launcher; see the LICENSE file for details.",
@@ -496,6 +497,7 @@ var de = translations{
 	"tip.noaccount": "Um in Offlinemodus zu starten, verwende den --username (-u) Parameter.",
 
 	"launcher.description": "Ein minimalisticher Minecraft Launcher für die Command Line.",
+	"launcher.project":     "Projekt",
 	"launcher.license":     "MIT-Lizenz",
 	"launcher.copyright":   "Copyright 2024-2025 telecter; Fork gepflegt von qwertasd501",
 	"launcher.fork":        "Terminalauncher ist ein veränderter Fork von cmd-launcher; Einzelheiten stehen in der LICENSE.",

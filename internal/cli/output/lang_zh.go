@@ -102,6 +102,7 @@ var zh = translations{
 	"tip.noaccount": "要以离线模式启动，请使用 --username (-u) 参数。",
 
 	"launcher.description": "一个极简的命令行 Minecraft 启动器。",
+	"launcher.project":     "项目地址",
 	"launcher.license":     "MIT 许可",
 	"launcher.copyright":   "版权所有 2024-2025 telecter；fork 由 qwertasd501 维护",
 	"launcher.fork":        "Terminalauncher 是 cmd-launcher 的修改版分支，详情见 LICENSE 文件。",

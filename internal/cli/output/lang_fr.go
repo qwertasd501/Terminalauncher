@@ -97,6 +97,7 @@ var fr = translations{
 	"tip.noaccount": "Pour lancer en mode hors ligne, utilise l'option --username (-u).",
 
 	"launcher.description": "Un launcher Minecraft minimaliste pour la ligne de commande.",
+	"launcher.project":     "Projet",
 	"launcher.license":     "Sous licence MIT",
 	"launcher.copyright":   "Copyright 2024-2025 telecter ; fork maintenu par qwertasd501",
 	"launcher.fork":        "Terminalauncher est un fork modifié de cmd-launcher ; les détails sont dans le fichier LICENSE.",

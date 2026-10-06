@@ -23,6 +23,10 @@ import (
 const (
 	name    = "Terminalauncher"
 	version = "1.0.0"
+
+	// projectURL is where the launcher is published. It is shown in the help, so that the address is
+	// at hand without digging through the documentation.
+	projectURL = "https://github.com/qwertasd501/Terminalauncher"
 )
 
 type aboutCmd struct{}
@@ -92,12 +96,14 @@ func (c *SettingsCmd) Run(ctx *kong.Context) error {
 }
 
 type CLI struct {
-	Shell       ShellCmd         `cmd:"" help:"${shell}" default:"1"`
-	Start       cmd.StartCmd     `cmd:"" help:"${start}"`
-	Instance    cmd.InstanceCmd  `cmd:"" help:"${instance}" aliases:"inst"`
-	Auth        cmd.AuthCmd      `cmd:"" help:"${auth}"`
-	Search      cmd.SearchCmd    `cmd:"" help:"${search}"`
-	Settings    SettingsCmd      `cmd:"" help:"${shell.settings}" aliases:"options,prefs"`
+	Shell    ShellCmd        `cmd:"" help:"${shell}" default:"1"`
+	Start    cmd.StartCmd    `cmd:"" help:"${start}"`
+	Instance cmd.InstanceCmd `cmd:"" help:"${instance}" aliases:"inst"`
+	Auth     cmd.AuthCmd     `cmd:"" help:"${auth}"`
+	Search   cmd.SearchCmd   `cmd:"" help:"${search}"`
+	// Kong interpolates ${name} from kong.Vars, whose names have their dots replaced by underscores,
+	// so a dotted key has to be spelled with underscores to be substituted at all.
+	Settings    SettingsCmd      `cmd:"" help:"${shell_settings}" aliases:"options,prefs"`
 	Completions komplete.Command `cmd:"" help:"${completions}"`
 	About       aboutCmd         `cmd:"" help:"${about}" aliases:"version"`
 
@@ -182,6 +188,18 @@ func valueFormatter(value *kong.Value) string {
 	return value.Help
 }
 
+// helpWithProject prints the generated help and, when it is the launcher's own help rather than one
+// of its commands, ends with where the project lives.
+func helpWithProject(options kong.HelpOptions, ctx *kong.Context) error {
+	if err := kong.DefaultHelpPrinter(options, ctx); err != nil {
+		return err
+	}
+	if ctx.Command() == "" {
+		output.Info("%s: %s", output.Translate("launcher.project"), projectURL)
+	}
+	return nil
+}
+
 func groups() kong.Groups {
 	return kong.Groups{
 		"overrides": output.Translate("start.arg.overrides"),
@@ -225,6 +243,7 @@ func Run() (func(int), int) {
 			Compact:             true,
 		}),
 		kong.ValueFormatter(valueFormatter),
+		kong.Help(helpWithProject),
 		groups(),
 		vars(),
 	)
