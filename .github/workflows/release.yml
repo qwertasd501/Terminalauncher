@@ -27,6 +27,18 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o dist/Terminalauncher-windows-amd64.exe .
           GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o dist/Terminalauncher-darwin-arm64 .
 
+      - name: Build portable Windows package (UPX)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq upx-ucl
+          mkdir -p portable
+          cp dist/Terminalauncher-windows-amd64.exe portable/
+          cp LICENSE portable/
+          cp README.md portable/
+          upx --best --lzma portable/Terminalauncher-windows-amd64.exe
+          cd portable && zip -9 ../dist/Terminalauncher-windows-amd64-portable.zip *
+          cd .. && ls -l dist/
+
       - name: Upload binaries to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
