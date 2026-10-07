@@ -2,7 +2,7 @@
 
 # Terminalauncher
 
-A minimal command line Minecraft launcher, with a PCL-style content manager.  
+A minimal command line Minecraft launcher
 EN | [ZH](README_zh.md)
 
 [![Build](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml/badge.svg)](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml)
@@ -19,6 +19,7 @@ EN | [ZH](README_zh.md)
 - [What this fork adds](#what-this-fork-adds)
 - [Usage](#usage)
 
+This project use AI
 
 [API Documentation](docs/API.md)
 
