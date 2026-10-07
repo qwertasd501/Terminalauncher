@@ -18,13 +18,7 @@ EN | [ZH](README_zh.md)
   - [Building from source](#building-from-source)
 - [What this fork adds](#what-this-fork-adds)
 - [Usage](#usage)
-  - [Instances](#instances)
-  - [Starting the game](#starting-the-game)
-  - [Content manager](#content-manager)
-  - [Settings](#settings)
-  - [Authentication](#authentication)
-  - [Instance Configuration](#instance-configuration)
-  - [Search](#search)
+
 
 [API Documentation](docs/API.md)
 
@@ -50,7 +44,7 @@ go install github.com/qwertasd501/Terminalauncher@latest
 
 ## What this fork adds
 
-- **Content manager** (PCL style): mods, resourcepacks, shaderpacks, datapacks and modpacks, with
+- **Content manager** : mods, resourcepacks, shaderpacks, datapacks and modpacks, with
   browsing and installation from Modrinth and a batch-update command. Reachable both globally and
   from a version's settings page.
 - **Six languages**: English, German, Chinese, French, Russian and Spanish. Switch at runtime with
