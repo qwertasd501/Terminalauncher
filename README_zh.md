@@ -3,7 +3,7 @@
 # Terminalauncher
 
 一个极简的命令行 Minecraft 启动器，内置 PCL 风格的内容管理器。  
-[EN](README.md) | [DE](README_de.md) | ZH
+[EN](README.md) | ZH
 
 [![Build](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml/badge.svg)](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/qwertasd501/Terminalauncher)
@@ -204,4 +204,6 @@ MIT。完整文本见 [LICENSE](LICENSE)。
 - `Copyright (c) 2024-2025 telecter` 覆盖原始程序。
 - `Copyright (c) 2026 qwertasd501` 覆盖本分支的改动。
 
-因此，重新分发本构建的二进制文件意味着要随附 `LICENSE` 文件——这正是便携包的做法。
+因此，重新分发本构建的二进制文件意味着要随附 `LICENSE` 文件——这正是便携包的做法。
+
+本软件非minecraft官方产品,未经mojang或microsoft批准,不与mojang及microsoft关联

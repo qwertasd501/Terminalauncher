@@ -3,7 +3,7 @@
 # Terminalauncher
 
 A minimal command line Minecraft launcher, with a PCL-style content manager.  
-EN | [DE](README_de.md) | [ZH](README_zh.md)
+EN | [ZH](README_zh.md)
 
 [![Build](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml/badge.svg)](https://github.com/qwertasd501/Terminalauncher/actions/workflows/build.yml)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/qwertasd501/Terminalauncher)
@@ -205,3 +205,5 @@ Terminalauncher is a fork of it. Both notices are kept in the license file:
 
 Redistributing a binary of this build therefore means shipping the `LICENSE` file with it, which is
 what the portable package does.
+
+本软件非minecraft官方产品,未经mojang或microsoft批准,不与mojang及microsoft关联
