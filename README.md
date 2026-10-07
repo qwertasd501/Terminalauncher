@@ -69,129 +69,51 @@ go install github.com/qwertasd501/Terminalauncher@latest
 
 Use the `--help` flag to get the usage information of any command.
 
-### Instances
+There are some commads
 
-**Creating an instance**  
-To create a new instance, use the `inst create` command.  
-You can use the `--loader, -l` flag to set the mod loader. Forge, NeoForge, Fabric, and Quilt are all supported. If you want to select a specific version of the loader, use the `--loader-version` flag. Otherwise, the latest applicable version is chosen.
+| Command | Description |
+|---|---|
+| `list versions` | List all instances |
+| `list mods` | List the mods, resource packs, shader packs or data packs of an instance |
+| `list modpacks` | List the instances installed from a modpack |
+| `select versions` | Select an instance to operate on |
+| `select users` | Select the active account with the arrow keys |
+| `select java` | Select the Java executable with the arrow keys |
+| `select mods` | Select one of them with the arrow keys, to operate on it |
+| `deselect` | Clear the current instance selection |
+| `list users` | List all accounts |
+| `create users` | Add an account |
+| `delete users` \| `del users` | Remove an account |
+| `download version` \| `create instance` | Create an instance (PCL calls this downloading a version); with no arguments the options are asked one by one, and a name that is left out is built from the version and loader |
+| `download mods` | Search Modrinth and install what you pick |
+| `download modpacks` | Install a modpack from Modrinth, or from a local `.mrpack` file |
+| `enable mods` | Switch a disabled mod or pack back on |
+| `disable mods` | Switch a mod or pack off without deleting it |
+| `delete mods` | Delete a mod or pack |
+| `rename mods` | Rename a mod or pack |
+| `import mods` | Copy mods or packs from a file or folder into the instance |
+| `update mods` | Look for newer versions on Modrinth and install them |
+| `search mods` | Search Modrinth and list what matches, without installing |
+| `set versions` | Edit the settings of an instance |
+| `set global` | Edit the settings shared by every instance |
+| `settings` \| `options` \| `prefs` | Change the launcher-wide settings, including the language |
+| `info` | Show information about the current selection |
+| `info mods` | Show everything known about one mod or pack |
+| `open` | Open one of an instance's folders |
+| `cd` | Change the game directory |
+| `pwd` | Print the game directory |
+| `delete version` | Delete an instance |
+| `rename version` | Rename an instance |
+| `start` \| `launch` | Start the specified instance |
+| `search` | Search versions |
+| `auth login` | Log in to an account |
+| `auth logout` | Log out of an account |
+| `about` | Display launcher version and about |
+| `help` \| `?` | Show this help |
+| `clear` \| `cls` | Clear the screen; with `memory` the pages the running programs are not using are moved to the page file |
+| `exit` \| `quit` | Leave the shell |
 
-Use the `--version, -v` flag to set the game version. If no value is supplied, the latest release is used. Acceptable values also include `release` or `snapshot` for the latest of either.
-
-When starting the game, the launcher will attempt to download a Java runtime from Mojang. If it can't find a suitable one, you will need to set one manually in the instance configuration.
-
-```sh
-Terminalauncher inst create -v 1.21.8 -l fabric CoolInstance
-```
-
-A version is created under the standard directory, `<game directory>/versions/<name>`, where PCL and
-the official launcher keep theirs, and its game data stays with it (version isolation is on, and can
-be changed from the version's own settings). Versions an older build created in
-`<game directory>/instances/<name>` are still found, started and deleted as usual.
-
-**Deleting instances**  
-If you want to delete an instance, use the `inst delete` command followed by the instance name.
-
-### Starting the Game
-
-
-To start Minecraft, simply run the `start` command followed by the name of the instance you want to start.
-
-```bash
-Terminalauncher start CoolInstance
-```
-
-To set game options and override instance configuration, you can set specific flags on the `start` command. These can be viewed in the help text.
-
-**Verbosity**  
-To increase the verbosity of the launcher, use the `--verbosity` flag. It can be set to either:
-
-- `info` - default, no extra logging
-- `extra` - more information when starting the game
-- `debug` - debug information useful for debugging the launcher
-
-### Content manager
-
-Inside the shell, `mods`, `resourcepacks`, `shaderpacks`, `datapacks` and `modpacks` open a picker for
-the current instance, where entries can be added from Modrinth, updated in batch or removed. The same
-screens are reachable from `versions` -> a version -> content manager.
-
-```bash
-Terminalauncher mods          # content of the selected instance
-Terminalauncher versions      # pick a version, then manage its content
-```
-
-### Settings
-
-Launcher-wide options are stored next to the game directory and can be changed from the command line
-or from the shell:
-
-```bash
-Terminalauncher settings                    # list current values
-Terminalauncher settings language zh        # switch the interface language
-Terminalauncher settings download_threads 32
-```
-
-### Authentication
-
-If you want to play the game in online mode, you will need to add a Microsoft account.
-
-To do this, use the `auth login` command. As part of Microsoft's OAuth2 flow, the default web browser will be opened to complete the authentication. This can be avoided with the `--no-browser` flag.  
-The launcher will automatically attempt to start the game in online mode if there is an account present.
-
-To play in offline mode, just pass the `-u, --username <username>` flag to the `start` command
-to set your username and the game will automatically launch in offline mode.
-
-You can log out via the `auth logout` command.
-
-### Instance Configuration
-
-To change configuration values for an instance, navigate to the instance directory and open the `instance.toml` file.
-
-Configurable values are:
-
-- Game version
-- Mod loader and version (if not vanilla)
-- Window resolution
-- Java executable path (if empty, a Mojang-provided Java runtime will be downloaded)
-- Custom JAR path to use instead of downloading the normal client JAR
-- Extra Java args
-- Minimum and maximum memory
-
-As mentioned previously, these values can be overriden with command line flags.
-
-**Example `instance.toml` file**
-
-```toml
-game_version = '1.21.8'
-mod_loader = 'fabric'
-mod_loader_version = '0.16.14'
-
-[config]
-# Path to a Java executable. If blank, a Mojang-provided JVM will be downloaded.
-java = '/usr/bin/java'
-# Extra arguments to pass to the JVM
-java_args = ''
-# Path to a custom JAR to use instead of the normal Minecraft client
-custom_jar = ''
-# Minimum game memory, in MB
-min_memory = 512
-# Maximum game memory, in MB
-max_memory = 4096
-
-# Game window resolution
-[config.resolution]
-width = 1708
-height = 960
-
-```
-
-### Search
-
-The `search` command can search for Minecraft or mod loader versions. It defaults to searching for game versions, but can also be used to search for Fabric, Quilt, and Forge versions.
-
-```bash
-Terminalauncher search [<query>] [--kind {versions, fabric, quilt, forge}]
-```
+Use `help <command>` to show the full syntax of a command.
 
 ## License
 
@@ -206,4 +128,4 @@ Terminalauncher is a fork of it. Both notices are kept in the license file:
 Redistributing a binary of this build therefore means shipping the `LICENSE` file with it, which is
 what the portable package does.
 
-本软件非minecraft官方产品,未经mojang或microsoft批准,不与mojang及microsoft关联
+This software is not an official Minecraft product, is not approved by or associated with Mojang or Microsoft.
